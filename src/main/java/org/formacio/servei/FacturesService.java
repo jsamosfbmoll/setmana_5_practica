@@ -8,17 +8,18 @@ import javax.transaction.Transactional;
 
 import org.formacio.domain.Factura;
 import org.formacio.domain.LiniaFactura;
+import org.formacio.repositori.FacturesRepositori;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FacturesService {
-
-	@PersistenceContext
-	EntityManager em;
 	
 	@Autowired
 	FidalitzacioService fidelitzacio;
+	
+	@Autowired
+	FacturesRepositori repositori;
 	
 	/*
 	 * Aquest metode ha de carregar la factura amb id idFactura i afegir una nova linia amb les dades
@@ -31,7 +32,7 @@ public class FacturesService {
 	@Transactional
 	public Factura afegirProducte (long idFactura, String producte, int totalProducte) {
 		
-		Factura producteFactura = em.find(Factura.class, idFactura);
+		Factura producteFactura = repositori.findById(idFactura).get();
 		LiniaFactura liniaFactura = new LiniaFactura();
 		Set<LiniaFactura> linies = producteFactura.getLinies();
 		
