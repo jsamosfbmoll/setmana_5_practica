@@ -1,11 +1,14 @@
 package org.formacio.servei;
 
+import java.util.Set;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 
 import org.formacio.domain.Factura;
 import org.formacio.domain.LiniaFactura;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,6 +16,9 @@ public class FacturesService {
 
 	@PersistenceContext
 	EntityManager em;
+	
+	@Autowired
+	FidalitzacioService fidelitzacio;
 	
 	/*
 	 * Aquest metode ha de carregar la factura amb id idFactura i afegir una nova linia amb les dades
@@ -27,10 +33,13 @@ public class FacturesService {
 		
 		Factura producteFactura = em.find(Factura.class, idFactura);
 		LiniaFactura liniaFactura = new LiniaFactura();
+		Set<LiniaFactura> linies = producteFactura.getLinies();
 		
 		liniaFactura.setProducte(producte);
 		liniaFactura.setTotal(totalProducte);
-		producteFactura.getLinies().add(liniaFactura);
+		linies.add(liniaFactura);
+		
+		if (linies.size() >= 4) fidelitzacio.notificaRegal(producteFactura.getClient().getEmail());
 		
 		return producteFactura;
 	}
