@@ -1,6 +1,7 @@
 package org.formacio.repositori;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.formacio.domain.Factura;
 import org.springframework.data.jpa.repository.Query;
@@ -14,4 +15,5 @@ public interface FacturesRepositori extends CrudRepository<Factura, Long> {
 	@Query("select f from Factura f where f.client.nom = ?1")
 	public List<Factura> getFactures(String nomClient);
 	
+	public Optional<Factura> findById(Long id);
 }
